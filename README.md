@@ -1,6 +1,6 @@
 # configs
 Vim and cmd.exe configurations
 <h1>File Paths</h1>
-~/.vimrc
-~/.vim/template.c
-~/.vim/ftplugin/c.vim
+<br>~/.vimrc
+<br>~/.vim/template.c
+<br>~/.vim/ftplugin/c.vim
