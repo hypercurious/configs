@@ -1,0 +1,3 @@
+# Machine-local overrides, never tracked.
+*.local
+.DS_Store
