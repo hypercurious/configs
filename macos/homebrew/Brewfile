@@ -1,0 +1,27 @@
+tap "felixkratz/formulae"
+tap "nikitabobko/tap"
+
+# CLI
+brew "awscli"
+brew "azure-cli"
+brew "bat"
+brew "colima"
+brew "docker"
+brew "docker-compose"
+brew "fzf"
+brew "htop"
+brew "kubectx"
+brew "kubernetes-cli"
+brew "nvm"
+brew "ripgrep"
+brew "yazi"
+
+# Window management helpers
+brew "felixkratz/formulae/borders"
+
+# GUI
+cask "aerospace"
+cask "easy-move+resize"
+cask "linearmouse"
+cask "maccy"
+cask "scroll-reverser"
