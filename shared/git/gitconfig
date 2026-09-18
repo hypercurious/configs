@@ -1,0 +1,20 @@
+# Shared git configuration.
+# Identity lives in ~/.gitconfig.local so this file stays machine-agnostic.
+[push]
+	autoSetupRemote = true
+[core]
+	editor = vim
+	excludesfile = ~/.gitignore_global
+[alias]
+	ap = add --patch
+	st = status --short --branch
+	lg = log --oneline --graph --decorate
+	last = log -1 --stat
+[init]
+	defaultBranch = main
+[pull]
+	rebase = false
+[diff]
+	colorMoved = default
+[include]
+	path = ~/.gitconfig.local
