@@ -1,0 +1,12 @@
+# macOS: PATH set up early so non-interactive shells find Homebrew tools too.
+
+path=(
+  /opt/homebrew/bin
+  /opt/homebrew/sbin
+  "$HOME/.local/bin"
+  "${KREW_ROOT:-$HOME/.krew}/bin"
+  $path
+)
+
+typeset -U path
+export PATH
