@@ -39,14 +39,6 @@ OS-specific parts under the OS directory — the shell configs are the clearest
 example: the macOS and Linux `zshrc` files each do their own PATH/package-manager
 setup and then source `shared/shell/profile.sh`.
 
-## Prerequisites
-
-- `git` and `vim`
-- [oh-my-zsh](https://ohmyz.sh) — the zsh configs source it and skip it silently
-  when it is missing, so install it first to get the prompt and completions:
-  `sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"`
-- macOS only: [Homebrew](https://brew.sh), for the Brewfile
-
 ## Install
 
 Clone to `~/configs` (the shell config defaults to that path; override with
@@ -61,11 +53,22 @@ cd ~/configs
 ./scripts/install.sh
 ```
 
-macOS packages:
+The script asks one yes/no question per tool — git, vim, oh-my-zsh, and on
+macOS the Brewfile, AeroSpace and LinearMouse — and every answer defaults to no:
 
-```sh
-brew bundle --file=~/configs/macos/homebrew/Brewfile
-```
+- **Installed tool:** yes links the repo's config for it.
+- **Missing tool:** yes installs it first (Homebrew on macOS, offering to
+  install Homebrew itself; apt, dnf, pacman or zypper on Linux), then links
+  the config.
+- **oh-my-zsh:** yes also replaces `~/.zshrc` with the repo's zshrc (theme,
+  plugins, nvm) and offers to make zsh your login shell.
+
+The shared shell profile, aliases and functions are set up whatever you
+answer. Without oh-my-zsh, your own `~/.zshrc` (or `~/.bashrc`, or
+`~/.bash_profile` on macOS, for bash users) is kept and gains a short block
+that loads them — so answering no to everything gives you just the aliases.
+
+`./scripts/install.sh --yes` answers yes to everything, for unattended setups.
 
 Windows (elevated PowerShell, or with Developer Mode enabled):
 
@@ -75,7 +78,7 @@ cd $HOME\configs
 powershell -ExecutionPolicy Bypass -File .\windows\install.ps1
 ```
 
-The installers symlink files into place and back up anything already there as
+The installers symlink config into place and back up anything already there as
 `<file>.backup-<timestamp>`. Re-running them is safe: files that already point
 at this repo are left alone.
 
@@ -105,8 +108,8 @@ printf '[user]\n\temail = you@company.com\n' > ~/.gitconfig.work
 
 ### 2. Anything your old shell config had
 
-The installer replaced `~/.zshrc` and backed the old one up as
-`~/.zshrc.backup-<timestamp>`. Third-party shell integrations that lived there —
+If you chose oh-my-zsh, the installer replaced `~/.zshrc` and backed the old
+one up as `~/.zshrc.backup-<timestamp>`. Third-party shell integrations that lived there —
 conda, nvm variants, vendor CLIs — are **not** carried over. Copy the lines you
 still want into `~/.shell.local`, which `shared/shell/profile.sh` sources last:
 
