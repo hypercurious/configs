@@ -9,9 +9,10 @@
 # LinearMouse) gets one yes/no question: use the repo's config for it, and
 # install it first if it is missing. Every answer defaults to no.
 #
-# The shared shell profile, aliases and functions are always set up. With
-# oh-my-zsh chosen, ~/.zshrc is replaced by the repo's zshrc; otherwise your
-# own rc files are kept and just gain a line that loads the shared profile.
+# With oh-my-zsh chosen, ~/.zshrc is replaced by the repo's zshrc, which
+# brings the shared aliases and functions with it. Otherwise the aliases get a
+# question of their own: yes keeps your rc files and just appends a line that
+# loads them. Answering no to everything changes nothing.
 #
 # Replaced files are backed up to <path>.backup-<timestamp> first.
 
@@ -22,7 +23,7 @@ STAMP="$(date +%Y%m%d%H%M%S)"
 DRY_RUN=0
 ASSUME_YES=0
 
-usage() { sed -n '2,17p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; }
+usage() { sed -n '2,18p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; }
 
 for arg in "$@"; do
     case "$arg" in
@@ -273,6 +274,17 @@ if [ "$OS" = "macos" ]; then
     fi
 fi
 
+# The repo's zshrc always loads the shared profile, so the aliases only need
+# their own question when oh-my-zsh was declined.
+USE_PROFILE=$USE_OMZ
+if [ "$USE_OMZ" -eq 0 ]; then
+    if ask "Load the repo's shell aliases and functions from your own rc files? (they override same-named aliases)"; then
+        USE_PROFILE=1
+    else
+        log "skip   shell aliases"
+    fi
+fi
+
 # With oh-my-zsh set up, offer zsh as the login shell too.
 if [ "$USE_OMZ" -eq 1 ] && [ "$(basename "${SHELL:-}")" != "zsh" ] &&
    ask "Make zsh your default shell?"; then
@@ -282,24 +294,24 @@ fi
 # --- 2. config ----------------------------------------------------------------
 log ""
 
-# Shell: always. With oh-my-zsh chosen, zsh gets the repo's zshrc; otherwise
-# the existing rc files are kept and just load the shared profile.
+# Shell. With oh-my-zsh chosen, zsh gets the repo's zshrc; with only the
+# aliases chosen, the existing rc files are kept and just load the shared profile.
 if [ "$USE_OMZ" -eq 1 ]; then
     link "$OS/zsh/zshrc" "$HOME/.zshrc"
     if [ "$OS" = "macos" ]; then
         link macos/zsh/zshenv "$HOME/.zshenv"
     fi
-elif installed zsh; then
+elif [ "$USE_PROFILE" -eq 1 ] && installed zsh; then
     hook_rc "$HOME/.zshrc"
 fi
-if ! installed zsh || [ "$(basename "${SHELL:-}")" = "bash" ]; then
+if [ "$USE_PROFILE" -eq 1 ] && { ! installed zsh || [ "$(basename "${SHELL:-}")" = "bash" ]; }; then
     if [ "$OS" = "macos" ]; then
         hook_rc "$HOME/.bash_profile"
     else
         hook_rc "$HOME/.bashrc"
     fi
 fi
-create_local "$HOME/.shell.local" "\
+[ "$USE_PROFILE" -eq 1 ] && create_local "$HOME/.shell.local" "\
 # Machine-local shell settings: credentials, work-only aliases, per-host paths.
 # This file is intentionally NOT tracked in the configs repo.
 

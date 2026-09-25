@@ -63,10 +63,12 @@ macOS the Brewfile, AeroSpace and LinearMouse — and every answer defaults to n
 - **oh-my-zsh:** yes also replaces `~/.zshrc` with the repo's zshrc (theme,
   plugins, nvm) and offers to make zsh your login shell.
 
-The shared shell profile, aliases and functions are set up whatever you
-answer. Without oh-my-zsh, your own `~/.zshrc` (or `~/.bashrc`, or
-`~/.bash_profile` on macOS, for bash users) is kept and gains a short block
-that loads them — so answering no to everything gives you just the aliases.
+The repo's zshrc loads the shared shell aliases and functions, so choosing
+oh-my-zsh includes them. Without oh-my-zsh, the script asks about the aliases
+separately: yes keeps your own `~/.zshrc` (or `~/.bashrc`, or `~/.bash_profile`
+on macOS, for bash users) and appends a short block that loads them. They
+override any existing aliases with the same names. Answering no to everything
+changes nothing.
 
 `./scripts/install.sh --yes` answers yes to everything, for unattended setups.
 
