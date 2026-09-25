@@ -10,6 +10,7 @@
 	st = status --short --branch
 	lg = log --oneline --graph --decorate
 	last = log -1 --stat
+	fb = "!f() { git branch -a | grep -i -- \"$1\"; }; f"
 [init]
 	defaultBranch = main
 [pull]
