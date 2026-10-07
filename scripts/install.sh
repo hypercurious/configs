@@ -5,9 +5,9 @@
 #   ./scripts/install.sh --yes      # set up everything, installing what is missing
 #   ./scripts/install.sh --dry-run  # show what would happen, change nothing
 #
-# Each tool (git, vim, oh-my-zsh, and on macOS the Brewfile, AeroSpace and
-# LinearMouse) gets one yes/no question: use the repo's config for it, and
-# install it first if it is missing. Every answer defaults to no.
+# Each tool (git, vim, oh-my-zsh, and on macOS the Brewfile, AeroSpace,
+# LinearMouse and iTerm2) gets one yes/no question: use the repo's config for
+# it, and install it first if it is missing. Every answer defaults to no.
 #
 # With oh-my-zsh chosen, ~/.zshrc is replaced by the repo's zshrc, which
 # brings the shared aliases and functions with it. Otherwise the aliases get a
@@ -43,6 +43,8 @@ esac
 OMZ_DIR="$HOME/.oh-my-zsh"
 OMZ_INSTALLER="https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
 BREW_INSTALLER="https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
+# Fixed GUID of the iTerm2 dynamic profile in macos/iterm2/profile.json.
+ITERM_PROFILE_GUID="745B55D5-2AF7-432C-8ED6-8D254BE4C971"
 
 log() { printf '%s\n' "$*"; }
 has() { command -v "$1" >/dev/null 2>&1; }
@@ -263,6 +265,7 @@ fi
 
 USE_AEROSPACE=0
 USE_LINEARMOUSE=0
+USE_ITERM=0
 if [ "$OS" = "macos" ]; then
     if { has aerospace || [ -d /Applications/AeroSpace.app ]; } &&
        ask "AeroSpace is installed. Use the repo's AeroSpace config?"; then
@@ -271,6 +274,10 @@ if [ "$OS" = "macos" ]; then
     if [ -d /Applications/LinearMouse.app ] &&
        ask "LinearMouse is installed. Use the repo's LinearMouse config?"; then
         USE_LINEARMOUSE=1
+    fi
+    if [ -d /Applications/iTerm.app ] &&
+       ask "iTerm2 is installed. Use the repo's iTerm2 profile (faaah sound on bell)?"; then
+        USE_ITERM=1
     fi
 fi
 
@@ -356,6 +363,14 @@ if [ "$USE_LINEARMOUSE" -eq 1 ]; then
     link macos/linearmouse/linearmouse.json "$HOME/.config/linearmouse/linearmouse.json"
 fi
 
+# iTerm2 loads the profile as a dynamic profile layered on "Default"; making it
+# the default profile applies it to new windows.
+if [ "$USE_ITERM" -eq 1 ]; then
+    link macos/iterm2/faaaah.wav   "$HOME/.config/zsh/sounds/faaaah.wav"
+    link macos/iterm2/profile.json "$HOME/Library/Application Support/iTerm2/DynamicProfiles/configs.json"
+    run defaults write com.googlecode.iterm2 "Default Bookmark Guid" -string "$ITERM_PROFILE_GUID"
+fi
+
 # --- 3. next steps ------------------------------------------------------------
 log ""
 log "Done. Next steps:"
@@ -365,5 +380,8 @@ fi
 if [ "$USE_OMZ" -eq 1 ] && [ "$REPO_DIR" != "$HOME/configs" ]; then
     log "  - the repo's zshrc expects it at ~/configs: move it there, or export"
     log "    CONFIGS_DIR=\"$REPO_DIR\" before zsh starts"
+fi
+if [ "$USE_ITERM" -eq 1 ]; then
+    log "  - restart iTerm2 if it is running, so new windows use the repo's profile"
 fi
 log "  - restart your shell"

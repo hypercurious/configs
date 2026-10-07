@@ -1,0 +1,42 @@
+{
+  "Profiles": [
+    {
+      "Name": "Default (configs)",
+      "Guid": "745B55D5-2AF7-432C-8ED6-8D254BE4C971",
+      "Dynamic Profile Parent Name": "Default",
+      "Silence Bell": true,
+      "Triggers": [
+        {
+          "name": "Faaah",
+          "action": "ScriptTrigger",
+          "matchType": 108,
+          "parameter": "afplay ~/.config/zsh/sounds/faaaah.wav",
+          "regex": "",
+          "contentregex": "",
+          "partial": false,
+          "disabled": false
+        },
+        {
+          "action": "iTermEnterWorkgroupTrigger",
+          "matchType": 113,
+          "parameter": "builtin.claudeCode",
+          "eventParams": { "jobName": "claude" },
+          "regex": "",
+          "contentregex": "",
+          "partial": false,
+          "disabled": false
+        },
+        {
+          "action": "iTermExitWorkgroupTrigger",
+          "matchType": 114,
+          "parameter": "",
+          "eventParams": { "jobName": "claude", "leaderOnly": true },
+          "regex": "",
+          "contentregex": "",
+          "partial": false,
+          "disabled": false
+        }
+      ]
+    }
+  ]
+}

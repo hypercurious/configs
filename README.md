@@ -22,6 +22,7 @@ macos/                  macOS only
   zsh/zshenv            PATH for non-interactive shells
   aerospace/            AeroSpace tiling WM config + window-routing scripts
   linearmouse/          per-device pointer/scroll settings
+  iterm2/               iTerm2 dynamic profile (silent bell that plays a sound)
   homebrew/Brewfile     packages and casks
 
 linux/                  Linux only
@@ -54,7 +55,8 @@ cd ~/configs
 ```
 
 The script asks one yes/no question per tool — git, vim, oh-my-zsh, and on
-macOS the Brewfile, AeroSpace and LinearMouse — and every answer defaults to no:
+macOS the Brewfile, AeroSpace, LinearMouse and iTerm2 — and every answer
+defaults to no:
 
 - **Installed tool:** yes links the repo's config for it.
 - **Missing tool:** yes installs it first (Homebrew on macOS, offering to
@@ -69,6 +71,15 @@ separately: yes keeps your own `~/.zshrc` (or `~/.bashrc`, or `~/.bash_profile`
 on macOS, for bash users) and appends a short block that loads them. They
 override any existing aliases with the same names. Answering no to everything
 changes nothing.
+
+On macOS, iTerm2 gets a dynamic profile, `Default (configs)`, that inherits
+everything from your `Default` profile and adds the bell setup: the normal bell
+is silenced and a *Bell received* trigger runs
+`afplay ~/.config/zsh/sounds/faaaah.wav`. The installer links the sound to that
+path, links the profile into `~/Library/Application Support/iTerm2/DynamicProfiles/`
+and makes it the default profile; restart iTerm2 if it was running. Change the
+bell setup in `macos/iterm2/profile.json`: iTerm2 doesn't save changes made to
+a dynamic profile in its settings.
 
 `./scripts/install.sh --yes` answers yes to everything, for unattended setups.
 

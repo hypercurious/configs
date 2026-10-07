@@ -22,6 +22,7 @@ brew "felixkratz/formulae/borders"
 # GUI
 cask "aerospace"
 cask "easy-move+resize"
+cask "iterm2"
 cask "linearmouse"
 cask "maccy"
 cask "scroll-reverser"
